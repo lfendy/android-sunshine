@@ -49,7 +49,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
                     .appendQueryParameter("q", strings[0])
                     .appendQueryParameter("mode", "json")
                     .appendQueryParameter("units", "metric")
-                    .appendQueryParameter("cnt", String.valueOf(DAYS))
+                    .appendQueryParameter("cnt", "14")
                     .build();
 //            URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q="+strings[0]+"&mode=json&units=metric&cnt=7");
 
@@ -90,6 +90,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
             return weatherData;
         } catch (JSONException e) {
             Log.e(LOG_TAG, "JSON parse Error ", e);
+            Log.e(LOG_TAG, e.getMessage());
             return null;
         } catch (IOException e) {
             Log.e(LOG_TAG, "IO Error ", e);
@@ -111,6 +112,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
     @Override
     protected void onPostExecute(String[] strings) {
         forecastAdaptor.clear();
-        forecastAdaptor.addAll(strings);
+        if(strings != null && strings.length > 0) {
+            forecastAdaptor.addAll(strings);
+        }
     }
 }
