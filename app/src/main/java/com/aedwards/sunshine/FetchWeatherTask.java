@@ -3,6 +3,9 @@ package com.aedwards.sunshine;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ArrayAdapter;
+
+import org.json.JSONException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,12 +17,19 @@ import java.net.URL;
 /**
  * Created by aaron on 24/08/2014.
  */
-public class FetchWeatherTask extends AsyncTask<String, Void, String>{
+public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
 
     private static final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
+    public static final int DAYS = 14;
+
+    private ArrayAdapter<String> forecastAdaptor;
+
+    public FetchWeatherTask(ArrayAdapter<String> forecastAdapter){
+        this.forecastAdaptor = forecastAdapter;
+    }
 
     @Override
-    protected String doInBackground(String... strings) {
+    protected String[] doInBackground(String... strings) {
         // These two need to be declared outside the try/catch
         // so that they can be closed in the finally block.
         HttpURLConnection urlConnection = null;
@@ -39,7 +49,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String>{
                     .appendQueryParameter("q", strings[0])
                     .appendQueryParameter("mode", "json")
                     .appendQueryParameter("units", "metric")
-                    .appendQueryParameter("cnt", "7")
+                    .appendQueryParameter("cnt", String.valueOf(DAYS))
                     .build();
 //            URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q="+strings[0]+"&mode=json&units=metric&cnt=7");
 
@@ -70,12 +80,19 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String>{
                 return null;
             }
 
-            Log.i(LOG_TAG, buffer.toString());
-            return buffer.toString();
+            String jsonString = buffer.toString();
+            String[] weatherData = WeatherDataParser.getWeatherDataFromJson(jsonString, DAYS);
+
+            for (String data : weatherData){
+                Log.i(LOG_TAG, data);
+            }
+
+            return weatherData;
+        } catch (JSONException e) {
+            Log.e(LOG_TAG, "JSON parse Error ", e);
+            return null;
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error ", e);
-            // If the code didn't successfully get the weather data, there's no point in attemping
-            // to parse it.
+            Log.e(LOG_TAG, "IO Error ", e);
             return null;
         } finally{
             if (urlConnection != null) {
@@ -89,5 +106,11 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String>{
                 }
             }
         }
+    }
+
+    @Override
+    protected void onPostExecute(String[] strings) {
+        forecastAdaptor.clear();
+        forecastAdaptor.addAll(strings);
     }
 }
