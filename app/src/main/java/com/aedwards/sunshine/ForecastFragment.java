@@ -1,5 +1,6 @@
 package com.aedwards.sunshine;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -33,8 +34,7 @@ public class ForecastFragment extends Fragment{
         inflater.inflate(R.menu.fragmentforecast, menu);
     }
 
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         setHasOptionsMenu(true);
 
@@ -48,8 +48,14 @@ public class ForecastFragment extends Fragment{
         ListView textViewForecast = (ListView)rootView.findViewById(R.id.listView_forecast);
         textViewForecast.setAdapter(weekAdaptor);
 
-        
-
+        textViewForecast.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Intent intent = new Intent(getActivity(), DetailActivity.class);
+                intent.putExtra(Intent.EXTRA_TEXT, adapterView.getItemAtPosition(i).toString());
+                startActivity(intent);
+            }
+        });
         new FetchWeatherTask(weekAdaptor).execute("Melbourne");
 
         return rootView;
