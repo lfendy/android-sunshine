@@ -8,10 +8,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Created by aaron on 24/08/2014.
@@ -45,6 +48,8 @@ public class ForecastFragment extends Fragment{
         ListView textViewForecast = (ListView)rootView.findViewById(R.id.listView_forecast);
         textViewForecast.setAdapter(weekAdaptor);
 
+        
+
         new FetchWeatherTask(weekAdaptor).execute("Melbourne");
 
         return rootView;
@@ -60,4 +65,6 @@ public class ForecastFragment extends Fragment{
 
         return super.onOptionsItemSelected(item);
     }
+
+
 }

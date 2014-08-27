@@ -34,6 +34,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
         // so that they can be closed in the finally block.
         HttpURLConnection urlConnection = null;
         BufferedReader reader = null;
+        String [] weatherData = new String[0];
 
         try {
             // Construct the URL for the OpenWeatherMap query
@@ -49,10 +50,8 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
                     .appendQueryParameter("q", strings[0])
                     .appendQueryParameter("mode", "json")
                     .appendQueryParameter("units", "metric")
-                    .appendQueryParameter("cnt", "14")
+                    .appendQueryParameter("cnt", String.valueOf(DAYS))
                     .build();
-//            URL url = new URL("http://api.openweathermap.org/data/2.5/forecast/daily?q="+strings[0]+"&mode=json&units=metric&cnt=7");
-
             // Create the request to OpenWeatherMap, and open the connection
             urlConnection = (HttpURLConnection) new URL(url.toString()).openConnection();
             urlConnection.setRequestMethod("GET");
@@ -63,7 +62,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 // Nothing to do.
-                return null;
+                return weatherData;
             }
             reader = new BufferedReader(new InputStreamReader(inputStream));
 
@@ -77,24 +76,21 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
 
             if (buffer.length() == 0) {
                 // Stream was empty.  No point in parsing.
-                return null;
+                return weatherData;
             }
 
             String jsonString = buffer.toString();
-            String[] weatherData = WeatherDataParser.getWeatherDataFromJson(jsonString, DAYS);
+            weatherData = WeatherDataParser.getWeatherDataFromJson(jsonString, DAYS);
 
             for (String data : weatherData){
                 Log.i(LOG_TAG, data);
             }
 
-            return weatherData;
         } catch (JSONException e) {
             Log.e(LOG_TAG, "JSON parse Error ", e);
             Log.e(LOG_TAG, e.getMessage());
-            return null;
         } catch (IOException e) {
             Log.e(LOG_TAG, "IO Error ", e);
-            return null;
         } finally{
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -106,14 +102,13 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
                     Log.e("PlaceholderFragment", "Error closing stream", e);
                 }
             }
+            return weatherData;
         }
     }
 
     @Override
-    protected void onPostExecute(String[] strings) {
+    protected void onPostExecute(String[] weatherData) {
         forecastAdaptor.clear();
-        if(strings != null && strings.length > 0) {
-            forecastAdaptor.addAll(strings);
-        }
+        forecastAdaptor.addAll(weatherData);
     }
 }
