@@ -2,6 +2,7 @@ package com.aedwards.sunshine;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -12,10 +13,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
 
 /**
  * Created by aaron on 24/08/2014.
@@ -56,9 +55,24 @@ public class ForecastFragment extends Fragment{
                 startActivity(intent);
             }
         });
-        new FetchWeatherTask(weekAdaptor).execute("Melbourne");
 
         return rootView;
+    }
+
+    @Override
+    public void onStart() {
+        updateWeather();;
+        super.onStart();
+    }
+
+    private void updateWeather(){
+        new FetchWeatherTask(weekAdaptor).execute(getLocation());
+    }
+
+    private String getLocation(){
+        return PreferenceManager
+                .getDefaultSharedPreferences(getActivity())
+                .getString(getString(R.string.pref_key_location), getString(R.string.pref_default_location));
     }
 
     @Override
@@ -66,7 +80,7 @@ public class ForecastFragment extends Fragment{
 
         switch (item.getItemId()){
             case R.id.action_refresh:
-                new FetchWeatherTask(weekAdaptor).execute("Melbourne");
+                updateWeather();
         }
 
         return super.onOptionsItemSelected(item);
