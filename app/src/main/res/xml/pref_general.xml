@@ -10,7 +10,17 @@
         android:inputType="textCapWords"
         android:capitalize="words"
         android:singleLine="true"
-        android:maxLines="1" />
+    android:maxLines="1" />
+
+    <ListPreference
+        android:key="@string/pref_key_temperature_unit"
+        android:title="@string/pref_title_temperature_unit"
+        android:defaultValue="@string/pref_default_temperature_unit"
+        android:entries="@array/pref_entries_temperature_unit"
+        android:entryValues="@array/pref_entry_values_temperature_unit"
+        android:capitalize="words"
+        android:singleLine="true"
+        android:maxLines="2" />
 
 
 </PreferenceScreen>

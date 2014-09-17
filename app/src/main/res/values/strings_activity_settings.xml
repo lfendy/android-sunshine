@@ -10,4 +10,17 @@
     <string name="pref_key_location" translatable="false">location</string>
     <string name="pref_default_location" translatable="false">94047</string>
 
+
+    <string name="pref_key_temperature_unit" translatable="false">tempunit</string>
+    <string name="pref_title_temperature_unit">Temperature Unit</string>
+    <string name="pref_default_temperature_unit" translatable="false">metric</string>
+    <string-array name="pref_entries_temperature_unit">
+        <item>Celsius</item>
+        <item>Fahrenheit</item>
+    </string-array>
+    <string-array name="pref_entry_values_temperature_unit">
+        <item>metric</item>
+        <item>imperial</item>
+    </string-array>
+
 </resources>

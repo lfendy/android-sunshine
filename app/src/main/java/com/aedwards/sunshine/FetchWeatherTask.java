@@ -49,7 +49,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, String[]>{
                     .appendPath("daily")
                     .appendQueryParameter("q", strings[0])
                     .appendQueryParameter("mode", "json")
-                    .appendQueryParameter("units", "metric")
+                    .appendQueryParameter("units", strings[1])
                     .appendQueryParameter("cnt", String.valueOf(DAYS))
                     .build();
             // Create the request to OpenWeatherMap, and open the connection

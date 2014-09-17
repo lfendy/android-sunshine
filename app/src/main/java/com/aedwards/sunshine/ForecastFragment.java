@@ -66,13 +66,19 @@ public class ForecastFragment extends Fragment{
     }
 
     private void updateWeather(){
-        new FetchWeatherTask(weekAdaptor).execute(getLocation());
+        new FetchWeatherTask(weekAdaptor).execute(getLocation(), getUnits());
     }
 
     private String getLocation(){
         return PreferenceManager
                 .getDefaultSharedPreferences(getActivity())
                 .getString(getString(R.string.pref_key_location), getString(R.string.pref_default_location));
+    }
+
+    private String getUnits(){
+        return PreferenceManager
+                .getDefaultSharedPreferences(getActivity())
+                .getString(getString(R.string.pref_key_temperature_unit), getString(R.string.pref_default_temperature_unit));
     }
 
     @Override
