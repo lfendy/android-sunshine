@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -13,6 +14,7 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        Log.d(this.getClass().getSimpleName(), "onCREATE madafaka");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sunshine);
         if (savedInstanceState == null) {
@@ -20,8 +22,38 @@ public class MainActivity extends ActionBarActivity {
                     .add(R.id.container, new ForecastFragment())
                     .commit();
         }
+
     }
 
+    @Override
+    protected void onDestroy() {
+        Log.d(this.getClass().getSimpleName(), "onDESTROY madafaka");
+        super.onDestroy();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.d(this.getClass().getSimpleName(), "onSTOP madafaka");
+        super.onStop();
+    }
+
+    @Override
+    protected void onStart() {
+        Log.d(this.getClass().getSimpleName(), "onSTART madafaka");
+        super.onStart();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.d(this.getClass().getSimpleName(), "onPAUSE madafaka");
+        super.onStop();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.d(this.getClass().getSimpleName(), "onRESUME madafaka");
+        super.onResume();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
